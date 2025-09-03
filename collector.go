@@ -16,14 +16,14 @@ var c *colly.Collector = colly.NewCollector(
 
 var numberRegex *regexp.Regexp = regexp.MustCompile(`\d+(,\d+)?`)
 
-func GetNumber(s string) int {
+func getNumber(s string) int {
 	s = strings.ReplaceAll(numberRegex.FindString(s), ",", "")
 
 	n, _ := strconv.Atoi(s)
 	return n
 }
 
-func CollectConsoles() *EntrySet {
+func collectConsoles() *EntrySet {
 	set := NewEntrySet()
 	scanner := c.Clone()
 
@@ -36,17 +36,17 @@ func CollectConsoles() *EntrySet {
 	return set
 }
 
-func CollectGamesInfo() (pageCount int, gameCount int) {
+func collectGamesInfo() (pageCount int, gameCount int) {
 	scanner := c.Clone()
 	pages := 0
 	games := 0
 
 	scanner.OnHTML("table.pagination td:nth-child(2)", func(e *colly.HTMLElement) {
-		pages = GetNumber(e.Text)
+		pages = getNumber(e.Text)
 	})
 
 	scanner.OnHTML("div#browse-sorting", func(e *colly.HTMLElement) {
-		games = GetNumber(e.Text)
+		games = getNumber(e.Text)
 	})
 
 	scanner.OnError(func(r *colly.Response, err error) {
@@ -78,7 +78,7 @@ func CollectGamesInfo() (pageCount int, gameCount int) {
 // 	return pages
 // }
 
-func GameCollector(set *EntrySet) *colly.Collector {
+func gameCollector(set *EntrySet) *colly.Collector {
 	scanner := colly.NewCollector(
 		colly.AllowedDomains("www.spriters-resource.com"),
 		colly.MaxDepth(1),
@@ -109,20 +109,20 @@ func GameCollector(set *EntrySet) *colly.Collector {
 	})
 
 	scanner.OnScraped(func(r *colly.Response) {
-		fmt.Printf("Finished scanning '%d'\n", GetNumber(r.Request.URL.String()))
+		fmt.Printf("Finished scanning '%d'\n", getNumber(r.Request.URL.String()))
 	})
 
 	scanner.OnError(func(r *colly.Response, err error) {
-		fmt.Printf("Failed to scan page %d\n", GetNumber(r.Request.URL.String()))
+		fmt.Printf("Failed to scan page %d\n", getNumber(r.Request.URL.String()))
 	})
 
 	return scanner
 }
 
-func CollectAllGames() *EntrySet {
-	pageCount, _ := CollectGamesInfo()
+func collectAllGames() *EntrySet {
+	pageCount, _ := collectGamesInfo()
 	set := NewEntrySet()
-	scanner := GameCollector(set)
+	scanner := gameCollector(set)
 
 	for page := 1; page < pageCount; page++ {
 		scanner.Visit(fmt.Sprintf("https://www.spriters-resource.com/browse/games/page-%d", page))
@@ -133,9 +133,9 @@ func CollectAllGames() *EntrySet {
 	return set
 }
 
-func CollectGamesOnPage(url string) *EntrySet {
+func collectGamesOnPage(url string) *EntrySet {
 	set := NewEntrySet()
-	scanner := GameCollector(set)
+	scanner := gameCollector(set)
 
 	scanner.Visit(url)
 	scanner.Wait()
@@ -143,6 +143,6 @@ func CollectGamesOnPage(url string) *EntrySet {
 	return set
 }
 
-func CollectGamesOnPageNumber(number int) *EntrySet {
-	return CollectGamesOnPage(fmt.Sprintf("https://www.spriters-resource.com/browse/games/page-%d", number))
+func collectGamesOnPageNumber(number int) *EntrySet {
+	return collectGamesOnPage(fmt.Sprintf("https://www.spriters-resource.com/browse/games/page-%d", number))
 }
