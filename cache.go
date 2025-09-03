@@ -32,8 +32,9 @@ func load(file string) *EntrySet {
 
 	file = path.Join("data/cache", file)
 
+	// If the requested set is not cached, create an empty one
 	if _, err := os.Stat(file); os.IsNotExist(err) {
-		panic(err)
+		return NewEntrySet()
 	}
 
 	bytes, err := os.ReadFile(file)
