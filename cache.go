@@ -18,7 +18,7 @@ func initData() {
 	}
 }
 
-func save(file string, set *EntrySet) {
+func saveEntries(file string, set *EntrySet) {
 	initData()
 
 	data, err := json.Marshal(set.Index)
@@ -27,7 +27,7 @@ func save(file string, set *EntrySet) {
 	check(os.WriteFile(path.Join("data/cache", file), data, 0644))
 }
 
-func load(file string) *EntrySet {
+func loadEntries(file string) *EntrySet {
 	initData()
 
 	file = path.Join("data/cache", file)
