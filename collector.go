@@ -105,7 +105,8 @@ func gameCollector(set *EntrySet) *colly.Collector {
 	// })
 
 	scanner.OnHTML(".icondisplay > a.iconlink", func(e *colly.HTMLElement) {
-		set.Store(strings.TrimSpace(e.Text), e.Attr("href"))
+		trimmed := strings.TrimSpace(e.Text)
+		set.Store(strings.Replace(trimmed, "\n    unpublished", "", 1), e.Attr("href"))
 	})
 
 	scanner.OnScraped(func(r *colly.Response) {
