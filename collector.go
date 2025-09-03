@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gocolly/colly"
+	"github.com/schollz/progressbar/v3"
 )
 
 var c *colly.Collector = colly.NewCollector(
@@ -78,7 +79,7 @@ func collectGamesInfo() (pageCount int, gameCount int) {
 // 	return pages
 // }
 
-func gameCollector(set *EntrySet) *colly.Collector {
+func gameCollector(set *EntrySet, onFinishedPage func(*colly.Response)) *colly.Collector {
 	scanner := colly.NewCollector(
 		colly.AllowedDomains("www.spriters-resource.com"),
 		colly.MaxDepth(1),
@@ -110,7 +111,8 @@ func gameCollector(set *EntrySet) *colly.Collector {
 	})
 
 	scanner.OnScraped(func(r *colly.Response) {
-		fmt.Printf("Finished scanning '%d'\n", getNumber(r.Request.URL.String()))
+		// fmt.Printf("Finished scanning '%d'\n", getNumber(r.Request.URL.String()))
+		onFinishedPage(r)
 	})
 
 	scanner.OnError(func(r *colly.Response, err error) {
@@ -120,26 +122,33 @@ func gameCollector(set *EntrySet) *colly.Collector {
 	return scanner
 }
 
-func collectAllGames() *EntrySet {
-	pageCount, _ := collectGamesInfo()
+func collectGamesInPageRange(start int, end int) *EntrySet {
 	set := NewEntrySet()
-	scanner := gameCollector(set)
+	bar := progressbar.Default(int64(end-start+1), "Collecting games")
 
-	for page := 1; page < pageCount; page++ {
+	scanner := gameCollector(set, func(r *colly.Response) {
+		bar.Add(1)
+	})
+
+	for page := start; page <= end; page++ {
 		scanner.Visit(fmt.Sprintf("https://www.spriters-resource.com/browse/games/page-%d", page))
 	}
 
 	scanner.Wait()
+
+	bar.Finish()
+	info("Collected %d games.\n", len(set.Index))
 
 	return set
 }
 
 func collectGamesOnPage(url string) *EntrySet {
 	set := NewEntrySet()
-	scanner := gameCollector(set)
+	scanner := gameCollector(set, func(r *colly.Response) {})
 
 	scanner.Visit(url)
 	scanner.Wait()
+	info("Collected %d games.\n", len(set.Index))
 
 	return set
 }
