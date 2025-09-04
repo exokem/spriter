@@ -14,7 +14,9 @@ Scanning is only required if you want to use the search functionality. Searching
 `spriter get <path>`
 > Downloads all of the assets at `https://www.spriters-resource.com<path>`.
 > 
-> e.g. `/ds_dsi/dgmnworldds/` (must include leading slash) 
+> e.g. `/ds_dsi/dgmnworldds/` (must include leading slash)
+>
+> Downloaded files will be placed in `/data/downloads<path>` relative to the working directory.
 
 ## Usage: Scanning
 
