@@ -64,6 +64,9 @@ func main() {
 
 	info("\n+-------------------------------------------------- spriter v1.0.0 --------------------------------------------------+\n\n")
 
+	// fmt.Println()
+	// getSprites("/ds_dsi/pokemonblackwhite")
+
 	if len(os.Args) < 2 {
 		usage()
 	}
@@ -73,6 +76,8 @@ func main() {
 		scan()
 	case "search":
 		search()
+	case "get":
+		get()
 	default:
 		usage()
 	}

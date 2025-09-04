@@ -61,36 +61,12 @@ func collectGamesInfo() (pageCount int, gameCount int) {
 	return pages, games
 }
 
-// func scanGamesPageCount() int {
-// 	scanner := c.Clone()
-// 	pages := 0
-// 	scanner.OnHTML("table.pagination td:nth-child(2)", func(e *colly.HTMLElement) {
-// 		pages = GetNumber(e.Text)
-// 	})
-
-// 	scanner.OnError(func(r *colly.Response, err error) {
-// 		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
-// 	})
-
-// 	scanner.Visit("https://www.spriters-resource.com/browse/games")
-
-// 	fmt.Printf("Discovered %d games pages\n", pages)
-
-// 	return pages
-// }
-
-func gameCollector(set *EntrySet, onFinishedPage func(*colly.Response)) *colly.Collector {
+func NewAsyncCollector() *colly.Collector {
 	scanner := colly.NewCollector(
 		colly.AllowedDomains("www.spriters-resource.com"),
 		colly.MaxDepth(1),
 		colly.Async(true),
 	)
-
-	scanner.Limit(&colly.LimitRule{
-		DomainGlob:  "*",
-		Parallelism: 4,
-		RandomDelay: 5 * time.Second,
-	})
 
 	// scanner.WithTransport(&http.Transport{
 	// 	Proxy: http.ProxyFromEnvironment,
@@ -104,6 +80,18 @@ func gameCollector(set *EntrySet, onFinishedPage func(*colly.Response)) *colly.C
 	// 	TLSHandshakeTimeout:   10 * time.Second,
 	// 	ExpectContinueTimeout: 1 * time.Second,
 	// })
+
+	scanner.Limit(&colly.LimitRule{
+		DomainGlob:  "*",
+		Parallelism: 4,
+		RandomDelay: 5 * time.Second,
+	})
+
+	return scanner
+}
+
+func gameCollector(set *EntrySet, onFinishedPage func(*colly.Response)) *colly.Collector {
+	scanner := NewAsyncCollector()
 
 	scanner.OnHTML(".icondisplay > a.iconlink", func(e *colly.HTMLElement) {
 		trimmed := strings.TrimSpace(e.Text)
@@ -155,4 +143,30 @@ func collectGamesOnPage(url string) *EntrySet {
 
 func collectGamesOnPageNumber(number int) *EntrySet {
 	return collectGamesOnPage(fmt.Sprintf("https://www.spriters-resource.com/browse/games/page-%d", number))
+}
+
+var specialCharRegex *regexp.Regexp = regexp.MustCompile(`[\[\]{},;'"/:#()]+`)
+var spaceRegex *regexp.Regexp = regexp.MustCompile(`[ \t\r\n_]`)
+var multiDashRegex *regexp.Regexp = regexp.MustCompile(`-[-]+`)
+
+func cleanSpriteName(name string) string {
+	name = strings.Trim(name, " \n\t\r")
+	name = specialCharRegex.ReplaceAllString(name, "")
+	name = spaceRegex.ReplaceAllString(name, "-")
+	name = strings.ToLower(name)
+	name = multiDashRegex.ReplaceAllString(name, "-")
+	return name
+}
+
+func collectSpriteLinks(page string) *EntrySet {
+	set := NewEntrySet()
+	scanner := c.Clone()
+
+	scanner.OnHTML("a.iconlink", func(e *colly.HTMLElement) {
+		set.Store(cleanSpriteName(e.Text), e.Attr("href"))
+	})
+
+	scanner.Visit(fmt.Sprintf("https://www.spriters-resource.com%s", page))
+
+	return set
 }
