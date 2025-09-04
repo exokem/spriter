@@ -39,6 +39,19 @@ func usage() {
 	info("spriter scan games --pages <start> <end>\n")
 	info(" - Fetches and caches all games for a specific range of pages (inclusive)\n")
 	info("\n")
+	info("--- searching ---\n")
+	info("Search for a specific game by name or console using the cached game index (populated with scan commands).\n")
+	info("\n")
+	info("spriter search --game <game>\n")
+	info(" - Filters results by game name only \n")
+	info("\n")
+	info("spriter search --console <console>\n")
+	info(" - Filters results by console name only \n")
+	info("\n")
+	info("spriter search --console <console> --game <game>\n")
+	info(" - Filters results by game and console \n")
+	info("\n")
+
 	os.Exit(0)
 }
 
@@ -49,13 +62,7 @@ func main() {
 		loadMeta(),
 	}
 
-	// results := make(map[string]int)
-
-	// searchByGame("pokemon", results)
-
-	// fmt.Println(runSearch(searchByGameAndConsole("poke", "ds")))
-
-	info("\n+--------------------------- spriter v1.0.0 ---------------------------+\n\n")
+	info("\n+-------------------------------------------------- spriter v1.0.0 --------------------------------------------------+\n\n")
 
 	if len(os.Args) < 2 {
 		usage()
