@@ -26,7 +26,7 @@ func scanGameMeta() {
 
 func saveGames() {
 	info("Saving games... ")
-	save("games.json", spriter.games)
+	save("games.json", spriter.games.Index)
 	info("Done.\n")
 }
 
