@@ -49,6 +49,12 @@ func main() {
 		loadMeta(),
 	}
 
+	// results := make(map[string]int)
+
+	// searchByGame("pokemon", results)
+
+	// fmt.Println(runSearch(searchByGameAndConsole("poke", "ds")))
+
 	info("\n+--------------------------- spriter v1.0.0 ---------------------------+\n\n")
 
 	if len(os.Args) < 2 {
@@ -58,6 +64,8 @@ func main() {
 	switch os.Args[1] {
 	case "scan":
 		scan()
+	case "search":
+		search()
 	default:
 		usage()
 	}

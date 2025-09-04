@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"slices"
 	"strings"
 	"unicode"
@@ -122,4 +123,61 @@ func runSearch(methods ...SearchMethod) []result {
 	})
 
 	return pairs
+}
+
+func search() {
+	if len(os.Args) < 3 {
+		usage()
+	}
+
+	var console string
+	var game string
+
+	for i := 2; i < len(os.Args); i++ {
+		arg := os.Args[i]
+
+		if len(os.Args) <= i+1 {
+			usage()
+		}
+
+		argv := os.Args[i+1]
+
+		switch arg {
+		case "--console":
+			console = argv
+			i++
+		case "--game":
+			game = argv
+			i++
+		default:
+			usage()
+		}
+	}
+
+	var entries []result
+
+	if len(console) != 0 && len(game) != 0 {
+		entries = runSearch(searchByGameAndConsole(game, console))
+	} else if len(console) != 0 {
+		entries = runSearch(searchByConsole(console))
+	} else if len(game) != 0 {
+		entries = runSearch(searchByGame(game))
+	}
+
+	info("%d Results (Showing 100 most relevant):\n", len(entries))
+
+	i := 0
+	var entry result
+
+	for i, entry = range entries {
+		if 100 <= i {
+			break
+		}
+
+		info(" - %s\n", entry.name)
+	}
+
+	if 100 < len(entries) {
+		info(" + %d less relevant results", len(entries)-i)
+	}
 }
