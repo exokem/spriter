@@ -51,6 +51,13 @@ func usage() {
 	info("spriter search --console <console> --game <game>\n")
 	info(" - Filters results by game and console \n")
 	info("\n")
+	info("--- downloading ---\n")
+	info("Download all of the sprite assets for a given game.\n")
+	info("\n")
+	info("spriter get <path>\n")
+	info(" - Downloads all of the assets at https://www.spriters-resource.com<path> \n")
+	info(" - e.g. /ds_dsi/dgmnworldds/ (must include leading slash) \n")
+	info("\n")
 
 	os.Exit(0)
 }
@@ -63,9 +70,6 @@ func main() {
 	}
 
 	info("\n+-------------------------------------------------- spriter v1.0.0 --------------------------------------------------+\n\n")
-
-	// fmt.Println()
-	// getSprites("/ds_dsi/pokemonblackwhite")
 
 	if len(os.Args) < 2 {
 		usage()
