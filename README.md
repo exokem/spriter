@@ -9,7 +9,7 @@ Scanning is only required if you want to use the search functionality. Searching
 
 ## Usage: Downloading
 
-`get <path>`
+`spriter get <path>`
 > Downloads all of the assets at `https://www.spriters-resource.com<path>`.
 > 
 > e.g. `/ds_dsi/dgmnworldds/` (must include leading slash) 
@@ -19,21 +19,21 @@ Scanning is only required if you want to use the search functionality. Searching
 Scanning is required before using search functionality.
 These commands scan the site and index information about what is available.
 
-`scan consoles`
+`spriter scan consoles`
 > Scans available consoles.
 
-`scan games --meta` `scan -m`
+`spriter scan games --meta` `scan -m`
 > Fetches and caches game and page counts.
 
-`scan games --all` `scan -a`
+`spriter scan games --all` `scan -a`
 > **WARNING**: This command may take longer than 10 minutes to finish.
 > 
 > Scans all game pages and caches available game information.
 
-`scan games --page <page-number>`
+`spriter scan games --page <page-number>`
 > Fetches and caches all games for a specific page number.
 
-`scan games --pages <first-page-number> <last-page-number>`
+`spriter scan games --pages <first-page-number> <last-page-number>`
 > Fetches and caches all games for a specific range of pages (inclusive).
 
 ## Usage: Searching (Requires Scanning)
@@ -41,11 +41,11 @@ Search the game cache by name or console. Requires scanning to work.
 
 The search algorithm is very basic so it won't work flawlessly all of the time.
 
-`search --console <console>`
+`spriter search --console <console>`
 > Filters results by console name only.
 
-`search --game <game>`
+`spriter search --game <game>`
 > Filters results by game name only.
 
-`search --game <game> --console <console>`
+`spriter search --game <game> --console <console>`
 > Filters results by game and console.
