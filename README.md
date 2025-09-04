@@ -7,7 +7,14 @@ This tool provides a scanning feature, which scans the list of available game as
 
 Scanning is only required if you want to use the search functionality. Searching is only really necessary if you don't know the URL of the game assets you are looking for.
 
-## Scanning (Optional)
+### Usage: Downloading
+
+`get <path>`
+> Downloads all of the assets at `https://www.spriters-resource.com<path>`.
+> 
+> e.g. `/ds_dsi/dgmnworldds/` (must include leading slash) 
+
+## Usage: Scanning
 
 Scanning is required before using search functionality.
 These commands scan the site and index information about what is available.
@@ -29,7 +36,7 @@ These commands scan the site and index information about what is available.
 `scan games --pages <first-page-number> <last-page-number>`
 > Fetches and caches all games for a specific range of pages (inclusive).
 
-## Searching (Optional - requires Scanning)
+## Usage: Searching (Requires Scanning)
 Search the game cache by name or console. Requires scanning to work.
 
 The search algorithm is very basic so it won't work flawlessly all of the time.
@@ -42,10 +49,3 @@ The search algorithm is very basic so it won't work flawlessly all of the time.
 
 `search --game <game> --console <console>`
 > Filters results by game and console.
-
-### Downloading
-
-`get <path>`
-> Downloads all of the assets at `https://www.spriters-resource.com<path>`.
-> 
-> e.g. `/ds_dsi/dgmnworldds/` (must include leading slash) 
