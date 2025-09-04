@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"slices"
 	"strings"
@@ -164,7 +165,7 @@ func search() {
 		entries = runSearch(searchByGame(game))
 	}
 
-	info("%d Results (Showing 100 most relevant):\n", len(entries))
+	info("%d of %d Results (Most Relevant):\n", int(math.Min(100, float64(len(entries)))), len(entries))
 
 	i := 0
 	var entry result
