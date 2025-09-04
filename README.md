@@ -7,7 +7,7 @@ This tool provides a scanning feature, which scans the list of available game as
 
 Scanning is only required if you want to use the search functionality. Searching is only really necessary if you don't know the URL of the game assets you are looking for.
 
-### Usage: Downloading
+## Usage: Downloading
 
 `get <path>`
 > Downloads all of the assets at `https://www.spriters-resource.com<path>`.
